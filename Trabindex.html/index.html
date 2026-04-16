@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cardápio Digital</title>
+
+    <style>
+      body {
+        font-family: Arial;
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+
+      header {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 15px;
+        background: #222;
+        color: white;
+        text-align: center;
+      }
+
+      #filtros {
+        position: absolute;
+        top: 80px;
+        left: 20px;
+      }
+
+      #produtos {
+        margin-top: 130px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        flex: 2;
+      }
+
+      .card {
+        background: white;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .card img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      button {
+        cursor: pointer;
+        padding: 5px 10px;
+        border: none;
+        background: #222;
+        color: white;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+
+      #pedido {
+        margin-top: 130px;
+        flex: 1;
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        height: fit-content;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>🍔 Lancheria Do Storm</h1>
+      <p>Faça seu pedido</p>
+    </header>
+
+    <section id="filtros">
+      <button onclick="filtrar('todos')">Todos</button>
+      <button onclick="filtrar('lanche')">Lanches</button>
+      <button onclick="filtrar('bebida')">Bebidas</button>
+      <button onclick="filtrar('sobremesa')">Sobremesas</button>
+    </section>
+
+    <section id="produtos"></section>
+
+    <aside id="pedido">
+      <h2>🛒 Pedido</h2>
+      <ul id="listaPedido"></ul>
+      <p>
+        <strong>Total: R$ <span id="total">0</span></strong>
+      </p>
+    </aside>
+
+    <script>
+      const produtos = [
+        {
+          nome: "Hambúrguer",
+          preco: 25,
+          categoria: "lanche",
+          imagem: "https://images.unsplash.com/photo-1550547660-d9450f859349",
+        },
+        {
+          nome: "X-Bacon",
+          preco: 30,
+          categoria: "lanche",
+          imagem:
+            "https://images.unsplash.com/photo-1568901346375-23c9450c58cd",
+        },
+        {
+          nome: "Batata Frita",
+          preco: 15,
+          categoria: "lanche",
+          imagem:
+            "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5",
+        },
+        {
+          nome: "Refrigerante",
+          preco: 8,
+          categoria: "bebida",
+          imagem:
+            "https://images.unsplash.com/photo-1581006852262-e4307cf6283a",
+        },
+        {
+          nome: "Suco Natural",
+          preco: 10,
+          categoria: "bebida",
+          imagem: "https:/images.unsplash.com/photo-1571687949920-9b0c3d5cdb92",
+        },
+        {
+          nome: "Água",
+          preco: 5,
+          categoria: "bebida",
+          imagem:
+            "https://images.unsplash.com/photo-1502741338009-cac2772e18bc",
+        },
+        {
+          nome: "Sorvete",
+          preco: 12,
+          categoria: "sobremesa",
+          imagem:
+            "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f",
+        },
+        {
+          nome: "Brownie",
+          preco: 15,
+          categoria: "sobremesa",
+          imagem:
+            "https://images.unsplash.com/photo-1606313564200-e75d5e30476c",
+        },
+      ];
+
+      let pedido = [];
+
+      function renderizar(lista) {
+        const container = document.getElementById("produtos");
+        container.innerHTML = "";
+
+        lista.forEach((item) => {
+          container.innerHTML += `
+        <div class="card">
+          <img src="${item.imagem}" alt="${item.nome}">
+          <h3>${item.nome}</h3>
+          <p>R$ ${item.preco}</p>
+          <button onclick='adicionar(${JSON.stringify(item)})'>
+            Adicionar
+          </button>
+        </div>
+      `;
+        });
+      }
+
+      function filtrar(categoria) {
+        if (categoria === "todos") {
+          renderizar(produtos);
+        } else {
+          const filtrados = produtos.filter(
+            (item) => item.categoria === categoria
+          );
+          renderizar(filtrados);
+        }
+      }
+
+      function adicionar(item) {
+        pedido.push(item);
+        atualizarPedido();
+      }
+
+      function calcularTotal() {
+        return pedido.reduce((total, item) => total + item.preco, 0);
+      }
+
+      function atualizarPedido() {
+        const lista = document.getElementById("listaPedido");
+        lista.innerHTML = "";
+
+        pedido.forEach((item) => {
+          lista.innerHTML += `<li>${item.nome} - R$ ${item.preco}</li>`;
+        });
+
+        document.getElementById("total").innerText = calcularTotal();
+      }
+
+      renderizar(produtos);
+    </script>
+  </body>
+</html>
